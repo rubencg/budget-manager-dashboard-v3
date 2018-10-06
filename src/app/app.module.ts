@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { AccountsComponent } from './pages/accounts/accounts.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     CalendarModule.forRoot()
   ],
   providers: [],

@@ -8,3 +8,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'app';
 }
+
+export enum CalendarView {
+  Month = 'month',
+  Week = 'week',
+  Day = 'day'
+}
