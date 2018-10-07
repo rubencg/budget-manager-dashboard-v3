@@ -16,6 +16,8 @@ import {
 
 } from 'angular-calendar';
 import { CalendarView } from '../../app.component';
+import { EntryService } from '../../services/entry.service';
+import { BudgetExpense } from '../../interfaces';
 
 const colors: any = {
   red: {
@@ -31,6 +33,8 @@ const colors: any = {
     secondary: '#FDF1BA'
   }
 };
+import moment from 'moment';
+
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -50,51 +54,26 @@ export class CalendarComponent implements OnInit {
     event: CalendarEvent;
   };
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      end: addDays(new Date(), 1),
-      title: 'A 3 day event',
-      color: colors.red,
-      // actions: this.actions,
-      allDay: true,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-      color: colors.yellow,
-      // actions: this.actions
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      end: addDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-      color: colors.blue,
-      allDay: true
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      end: new Date(),
-      title: 'A draggable and resizable event',
-      color: colors.yellow,
-      // actions: this.actions,
-      resizable: {
-        beforeStart: true,
-        afterEnd: true
-      },
-      draggable: true
-    }
-  ];
+  events: CalendarEvent[] = [];
 
   activeDayIsOpen: boolean = false;
 
 
-  constructor() { }
+  constructor(private entryService: EntryService) {
+    this.entryService.getAllBudgetExpenses()
+      .subscribe((items: BudgetExpense[]) => {
+        items.forEach(budgetExpense => {
+          this.events.push(
+            {
+              start: moment(new Date(+budgetExpense.date)).toDate(),
+              title: budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name,
+              color: colors.red,
+              // actions: this.actions,
+            }
+          );
+        });
+      });
+  }
 
   ngOnInit() {
 

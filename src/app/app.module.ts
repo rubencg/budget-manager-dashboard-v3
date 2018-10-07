@@ -6,6 +6,9 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { AccountsComponent } from './pages/accounts/accounts.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServicesModule } from './services/services.module';
+import { AngularFireModule } from '@angular/fire';
+import { FIREBASE_CONFIG } from './firebase.config';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    ServicesModule,
+    AngularFireModule.initializeApp(FIREBASE_CONFIG),
     CalendarModule.forRoot()
   ],
   providers: [],
