@@ -17,7 +17,7 @@ import {
 } from 'angular-calendar';
 import { CalendarView } from '../../app.component';
 import { EntryService } from '../../services/entry.service';
-import { BudgetExpense } from '../../interfaces';
+import { BudgetExpense, Income, Expense } from '../../interfaces';
 
 const colors: any = {
   red: {
@@ -28,12 +28,12 @@ const colors: any = {
     primary: '#1e90ff',
     secondary: '#D1E8FF'
   },
-  yellow: {
-    primary: '#e3bc08',
-    secondary: '#FDF1BA'
+  green: {
+    primary: '#20ad31',
+    secondary: '#c9fdba'
   }
 };
-import moment from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-calendar',
@@ -66,7 +66,36 @@ export class CalendarComponent implements OnInit {
           this.events.push(
             {
               start: moment(new Date(+budgetExpense.date)).toDate(),
-              title: budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name,
+              title: budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + " (" + budgetExpense.notes +")",
+              color: colors.blue,
+              // actions: this.actions,
+            }
+          );
+        });
+      });
+
+      this.entryService.getAllIncomes()
+      .subscribe((items: Income[]) => {
+        items.forEach(income => {
+          this.events.push(
+            {
+              start: moment(new Date(+income.date)).toDate(),
+              title: income.category.name + " (" + income.notes +")",
+              color: colors.green,
+              // actions: this.actions,
+            }
+          );
+        });
+      });
+      let a : CalendarEvent;
+
+      this.entryService.getAllExpenses()
+      .subscribe((items: Expense[]) => {
+        items.forEach(expense => {
+          this.events.push(
+            {
+              start: moment(new Date(+expense.date)).toDate(),
+              title: expense.category.name + " > " + expense.category.subcategory.name + " (" + expense.notes +")",
               color: colors.red,
               // actions: this.actions,
             }

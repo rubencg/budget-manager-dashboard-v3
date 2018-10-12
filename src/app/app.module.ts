@@ -9,22 +9,31 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServicesModule } from './services/services.module';
 import { AngularFireModule } from '@angular/fire';
 import { FIREBASE_CONFIG } from './firebase.config';
+import { LoginComponent } from './pages/login/login.component';
+import { AuthGuard } from './guards/auth.guard';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { NgxLoadingModule } from 'ngx-loading';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
-    AccountsComponent
+    AccountsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ServicesModule,
+    AngularFireAuthModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
-    CalendarModule.forRoot()
+    CalendarModule.forRoot(),
+    NgxLoadingModule.forRoot({})
   ],
-  providers: [],
+  providers: [ AuthGuard ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

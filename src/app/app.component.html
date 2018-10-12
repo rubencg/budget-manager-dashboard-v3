@@ -6,13 +6,13 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link"  routerLink="/">Calendario</a>
+        <a class="nav-link" [routerLink]="['/calendar']">Calendario</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/accounts">Cuentas</a>
+        <a class="nav-link" [routerLink]="['/accounts']">Cuentas</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Cerrar sesion</a>
+        <a class="nav-link" href="#" (click)="logout()">Cerrar sesion</a>
       </li>
     </ul>
   </div>
