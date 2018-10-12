@@ -66,7 +66,7 @@ export class CalendarComponent implements OnInit {
           this.events.push(
             {
               start: moment(new Date(+budgetExpense.date)).toDate(),
-              title: budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + " (" + budgetExpense.notes +")",
+              title: "$" + budgetExpense.amount + " " + budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + (budgetExpense.notes ? " (" + budgetExpense.notes +")" : ""),
               color: colors.blue,
               // actions: this.actions,
             }
@@ -80,7 +80,7 @@ export class CalendarComponent implements OnInit {
           this.events.push(
             {
               start: moment(new Date(+income.date)).toDate(),
-              title: income.category.name + " (" + income.notes +")",
+              title: "$" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes +")" : ""),
               color: colors.green,
               // actions: this.actions,
             }
@@ -95,7 +95,7 @@ export class CalendarComponent implements OnInit {
           this.events.push(
             {
               start: moment(new Date(+expense.date)).toDate(),
-              title: expense.category.name + " > " + expense.category.subcategory.name + " (" + expense.notes +")",
+              title: "$" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes +")" : ""),
               color: colors.red,
               // actions: this.actions,
             }
