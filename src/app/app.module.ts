@@ -14,6 +14,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { NgxLoadingModule } from 'ngx-loading';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     ServicesModule,
     AngularFireAuthModule,
+    NgxSpinnerModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     CalendarModule.forRoot(),
     NgxLoadingModule.forRoot({})

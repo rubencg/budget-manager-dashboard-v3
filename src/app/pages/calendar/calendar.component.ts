@@ -1,3 +1,4 @@
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Component, OnInit } from '@angular/core';
 import {
   startOfDay,
@@ -59,7 +60,12 @@ export class CalendarComponent implements OnInit {
   activeDayIsOpen: boolean = false;
 
 
-  constructor(private entryService: EntryService) {
+  constructor(private entryService: EntryService, private spinner: NgxSpinnerService) {
+  }
+
+  ngOnInit() {
+    this.spinner.show();
+
     this.entryService.getAllBudgetExpenses()
       .subscribe((items: BudgetExpense[]) => {
         items.forEach(budgetExpense => {
@@ -101,11 +107,8 @@ export class CalendarComponent implements OnInit {
             }
           );
         });
+        this.spinner.hide(); // To hide the spinner
       });
-  }
-
-  ngOnInit() {
-
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
