@@ -83,7 +83,7 @@ export class CalendarComponent implements OnInit {
       this.events.push(
         {
           start: moment(new Date(+income.date)).toDate(),
-          title: "$" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes +")" : ""),
+          title: "("+ income.toAccount.name + ") $" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes +")" : ""),
           color: colors.green,
           // actions: this.actions,
         }
@@ -97,7 +97,7 @@ export class CalendarComponent implements OnInit {
       this.events.push(
         {
           start: moment(new Date(+expense.date)).toDate(),
-          title: "$" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes +")" : ""),
+          title: "("+ expense.fromAccount.name + ") $" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes +")" : ""),
           color: colors.red,
           // actions: this.actions,
         }
