@@ -63,50 +63,74 @@ export class CalendarComponent implements OnInit {
   constructor(private entryService: EntryService, private spinner: NgxSpinnerService) {
   }
 
+  convertBudgetExepensesToCalendarEvents(items: BudgetExpense[]): void{
+    if(!items) return;
+    items.forEach(budgetExpense => {
+      this.events.push(
+        {
+          start: moment(new Date(+budgetExpense.date)).toDate(),
+          title: "$" + budgetExpense.amount + " " + budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + (budgetExpense.notes ? " (" + budgetExpense.notes +")" : ""),
+          color: colors.blue,
+          // actions: this.actions,
+        }
+      );
+    });
+  }
+
+  convertIncomesToCalendarEvents(items: Income[]): void{
+    if(!items) return;
+    items.forEach(income => {
+      this.events.push(
+        {
+          start: moment(new Date(+income.date)).toDate(),
+          title: "$" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes +")" : ""),
+          color: colors.green,
+          // actions: this.actions,
+        }
+      );
+    });
+  }
+
+  convertExpensesToCalendarEvents(items: Expense[]): void{
+    if(!items) return;
+    items.forEach(expense => {
+      this.events.push(
+        {
+          start: moment(new Date(+expense.date)).toDate(),
+          title: "$" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes +")" : ""),
+          color: colors.red,
+          // actions: this.actions,
+        }
+      );
+    });
+  }
+
   ngOnInit() {
     this.spinner.show();
 
     this.entryService.getAllBudgetExpenses()
       .subscribe((items: BudgetExpense[]) => {
-        items.forEach(budgetExpense => {
-          this.events.push(
-            {
-              start: moment(new Date(+budgetExpense.date)).toDate(),
-              title: "$" + budgetExpense.amount + " " + budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + (budgetExpense.notes ? " (" + budgetExpense.notes +")" : ""),
-              color: colors.blue,
-              // actions: this.actions,
-            }
-          );
-        });
+        this.events = [];
+        this.convertBudgetExepensesToCalendarEvents(items);
+        this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
+        this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
       });
 
       this.entryService.getAllIncomes()
       .subscribe((items: Income[]) => {
-        items.forEach(income => {
-          this.events.push(
-            {
-              start: moment(new Date(+income.date)).toDate(),
-              title: "$" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes +")" : ""),
-              color: colors.green,
-              // actions: this.actions,
-            }
-          );
-        });
+        this.events = [];
+        this.convertIncomesToCalendarEvents(items);
+        this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
+        this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
       });
-      let a : CalendarEvent;
 
       this.entryService.getAllExpenses()
       .subscribe((items: Expense[]) => {
-        items.forEach(expense => {
-          this.events.push(
-            {
-              start: moment(new Date(+expense.date)).toDate(),
-              title: "$" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes +")" : ""),
-              color: colors.red,
-              // actions: this.actions,
-            }
-          );
-        });
+        this.events = [];
+        this.convertExpensesToCalendarEvents(items);
+        this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
+        this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
+
         this.spinner.hide(); // To hide the spinner
       });
   }
