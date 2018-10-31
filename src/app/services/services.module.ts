@@ -5,6 +5,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireModule } from '@angular/fire';
 import { AuthenticationService } from './authentication.service';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { CategoriesService } from './categories.service';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { AngularFireAuth } from '@angular/fire/auth';
   providers: [
     AngularFireAuth,
     AuthenticationService,
-    EntryService
+    EntryService,
+    CategoriesService
   ],
   declarations: []
 })

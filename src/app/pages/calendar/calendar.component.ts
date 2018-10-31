@@ -18,7 +18,7 @@ import {
 } from 'angular-calendar';
 import { CalendarView } from '../../app.component';
 import { EntryService } from '../../services/entry.service';
-import { BudgetExpense, Income, Expense } from '../../interfaces';
+import { BudgetExpense, Income, Expense, EntryType } from '../../interfaces';
 
 const colors: any = {
   red: {
@@ -35,6 +35,7 @@ const colors: any = {
   }
 };
 import * as moment from 'moment';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendar',
@@ -60,7 +61,7 @@ export class CalendarComponent implements OnInit {
   activeDayIsOpen: boolean = false;
 
 
-  constructor(private entryService: EntryService, private spinner: NgxSpinnerService) {
+  constructor(private entryService: EntryService, private spinner: NgxSpinnerService, private router: Router) {
   }
 
   convertBudgetExepensesToCalendarEvents(items: BudgetExpense[]): void{
@@ -71,7 +72,10 @@ export class CalendarComponent implements OnInit {
           start: moment(new Date(+budgetExpense.date)).toDate(),
           title: "$" + budgetExpense.amount + " " + budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + (budgetExpense.notes ? " (" + budgetExpense.notes +")" : ""),
           color: colors.blue,
-          // actions: this.actions,
+          meta: {
+            entryType: EntryType.BudgetExpense,
+            key: budgetExpense.key
+          }
         }
       );
     });
@@ -85,6 +89,10 @@ export class CalendarComponent implements OnInit {
           start: moment(new Date(+income.date)).toDate(),
           title: "("+ income.toAccount.name + ") $" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes +")" : ""),
           color: colors.green,
+          meta: {
+            entryType: EntryType.Income,
+            key: income.key
+          }
           // actions: this.actions,
         }
       );
@@ -99,6 +107,10 @@ export class CalendarComponent implements OnInit {
           start: moment(new Date(+expense.date)).toDate(),
           title: "("+ expense.fromAccount.name + ") $" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes +")" : ""),
           color: colors.red,
+          meta: {
+            entryType: EntryType.Expense,
+            key: expense.key
+          }
           // actions: this.actions,
         }
       );
@@ -147,6 +159,10 @@ export class CalendarComponent implements OnInit {
         this.activeDayIsOpen = true;
       }
     }
+  }
+
+  handleEvent(action: string, event: CalendarEvent): void {
+    this.router.navigate(['/edit-entry', event.meta.key, event.meta.entryType]);
   }
 
 }

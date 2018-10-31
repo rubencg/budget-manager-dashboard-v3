@@ -15,13 +15,16 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { NgxLoadingModule } from 'ngx-loading';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { EditEntryComponent } from './pages/edit-entry/edit-entry.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarComponent,
     AccountsComponent,
-    LoginComponent
+    LoginComponent,
+    EditEntryComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +34,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ServicesModule,
     AngularFireAuthModule,
     NgxSpinnerModule,
+    FormsModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     CalendarModule.forRoot(),
     NgxLoadingModule.forRoot({})
