@@ -6,6 +6,10 @@ import { AngularFireModule } from '@angular/fire';
 import { AuthenticationService } from './authentication.service';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { CategoriesService } from './categories.service';
+import { ExpenseService } from './expense.service';
+import { IncomeService } from './income.service';
+import { BudgetExpenseService } from './budget-expense.service';
+import { AccountService } from './account.service';
 
 @NgModule({
   imports: [
@@ -17,7 +21,11 @@ import { CategoriesService } from './categories.service';
     AngularFireAuth,
     AuthenticationService,
     EntryService,
-    CategoriesService
+    CategoriesService,
+    ExpenseService,
+    IncomeService,
+    BudgetExpenseService,
+    AccountService
   ],
   declarations: []
 })

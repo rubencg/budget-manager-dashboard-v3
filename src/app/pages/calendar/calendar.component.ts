@@ -36,6 +36,7 @@ const colors: any = {
 };
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { AccountService } from 'src/app/services/account.service';
 
 @Component({
   selector: 'app-calendar',
@@ -61,16 +62,17 @@ export class CalendarComponent implements OnInit {
   activeDayIsOpen: boolean = false;
 
 
-  constructor(private entryService: EntryService, private spinner: NgxSpinnerService, private router: Router) {
+  constructor(private entryService: EntryService, private spinner: NgxSpinnerService, private router: Router,
+    private accountService: AccountService) {
   }
 
-  convertBudgetExepensesToCalendarEvents(items: BudgetExpense[]): void{
-    if(!items) return;
+  convertBudgetExepensesToCalendarEvents(items: BudgetExpense[]): void {
+    if (!items) return;
     items.forEach(budgetExpense => {
       this.events.push(
         {
           start: moment(new Date(+budgetExpense.date)).toDate(),
-          title: "$" + budgetExpense.amount + " " + budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + (budgetExpense.notes ? " (" + budgetExpense.notes +")" : ""),
+          title: "$" + budgetExpense.amount + " " + budgetExpense.category.name + " > " + budgetExpense.category.subcategory.name + (budgetExpense.notes ? " (" + budgetExpense.notes + ")" : ""),
           color: colors.blue,
           meta: {
             entryType: EntryType.BudgetExpense,
@@ -81,13 +83,13 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  convertIncomesToCalendarEvents(items: Income[]): void{
-    if(!items) return;
+  convertIncomesToCalendarEvents(items: Income[]): void {
+    if (!items) return;
     items.forEach(income => {
       this.events.push(
         {
           start: moment(new Date(+income.date)).toDate(),
-          title: "("+ income.toAccount.name + ") $" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes +")" : ""),
+          title: "(" + income.toAccount.name + ") $" + income.amount + " " + income.category.name + (income.notes ? " (" + income.notes + ")" : ""),
           color: colors.green,
           meta: {
             entryType: EntryType.Income,
@@ -99,13 +101,13 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  convertExpensesToCalendarEvents(items: Expense[]): void{
-    if(!items) return;
+  convertExpensesToCalendarEvents(items: Expense[]): void {
+    if (!items) return;
     items.forEach(expense => {
       this.events.push(
         {
           start: moment(new Date(+expense.date)).toDate(),
-          title: "("+ expense.fromAccount.name + ") $" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes +")" : ""),
+          title: "(" + expense.fromAccount.name + ") $" + expense.amount + " " + expense.category.name + " > " + expense.category.subcategory.name + (expense.notes ? " (" + expense.notes + ")" : ""),
           color: colors.red,
           meta: {
             entryType: EntryType.Expense,
@@ -119,32 +121,33 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     this.spinner.show();
-
-    this.entryService.getAllBudgetExpenses()
-      .subscribe((items: BudgetExpense[]) => {
-        this.events = [];
-        this.convertBudgetExepensesToCalendarEvents(items);
-        this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
-        this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
-      });
+    this.accountService.getAllAccounts().subscribe(items => {
+      this.entryService.getAllBudgetExpenses()
+        .subscribe((items: BudgetExpense[]) => {
+          this.events = [];
+          this.convertBudgetExepensesToCalendarEvents(items);
+          this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
+          this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
+        });
 
       this.entryService.getAllIncomes()
-      .subscribe((items: Income[]) => {
-        this.events = [];
-        this.convertIncomesToCalendarEvents(items);
-        this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
-        this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
-      });
+        .subscribe((items: Income[]) => {
+          this.events = [];
+          this.convertIncomesToCalendarEvents(items);
+          this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
+          this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
+        });
 
       this.entryService.getAllExpenses()
-      .subscribe((items: Expense[]) => {
-        this.events = [];
-        this.convertExpensesToCalendarEvents(items);
-        this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
-        this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
+        .subscribe((items: Expense[]) => {
+          this.events = [];
+          this.convertExpensesToCalendarEvents(items);
+          this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
+          this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
 
-        this.spinner.hide(); // To hide the spinner
-      });
+          this.spinner.hide(); // To hide the spinner
+        });
+    });
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
