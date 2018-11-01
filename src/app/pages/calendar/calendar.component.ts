@@ -168,4 +168,16 @@ export class CalendarComponent implements OnInit {
     this.router.navigate(['/edit-entry', event.meta.key, event.meta.entryType]);
   }
 
+  addExpense(){
+    this.router.navigate(['/create-entry', EntryType.Expense]);
+  }
+
+  addBudgetExpense(){
+    this.router.navigate(['/create-entry', EntryType.BudgetExpense]);
+  }
+
+  addIncome(){
+    this.router.navigate(['/create-entry', EntryType.Income]);
+  }
+
 }

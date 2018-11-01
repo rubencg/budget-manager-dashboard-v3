@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EntryType, Category, Account, IdNameBasic, Income, Expense, BudgetExpense } from 'src/app/interfaces';
+import { EntryType, Category, Account, IdNameBasic, Income, Expense, BudgetExpense, CategoryBasic } from 'src/app/interfaces';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { CategoriesService } from 'src/app/services/categories.service';
@@ -10,6 +10,7 @@ import { ExpenseService } from 'src/app/services/expense.service';
 import { AccountService } from 'src/app/services/account.service';
 import { IncomeService } from 'src/app/services/income.service';
 import { BudgetExpenseService } from 'src/app/services/budget-expense.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-edit-entry',
@@ -123,12 +124,46 @@ export class EditEntryComponent implements OnInit {
     }
   }
 
+  getIncome(): Income {
+    let a: Account = this.entryForm.controls['account'].value;
+    let c: Category = this.entryForm.controls['category'].value;
+    let amount: number = +this.entryForm.controls['amount'].value;
+    let notes: string = this.entryForm.controls['notes'].value;
+    let category: CategoryBasic = {
+      id: c.key,
+      name: c.name,
+      img: c.img,
+      subcategory: null
+    };
+    let toAccount: IdNameBasic = {
+      id: a.key,
+      name: a.name,
+      img: a.img
+    };
+
+    if (this.key) {
+      this.entry.amount = amount;
+      this.entry.notes = notes;
+      this.entry.category = category;
+      this.entry.toAccount = toAccount;
+      return this.entry;
+    } else {
+      let income: Income = {
+        amount: amount,
+        notes: notes,
+        category: category,
+        toAccount: toAccount,
+        date: moment().format('x')
+      };
+      return income;
+    }
+  }
+
   submit() {
     let a: Account = this.entryForm.controls['account'].value;
     let c: Category = this.entryForm.controls['category'].value;
-    let initialAmount: number = this.entry.amount;
-    this.entry.amount = +this.entryForm.controls['amount'].value;
-    this.entry.notes = this.entryForm.controls['notes'].value;
+    // this.entry.amount = +this.entryForm.controls['amount'].value;
+    // this.entry.notes = this.entryForm.controls['notes'].value;
     let initialAccount: Account;
 
     switch (this.entryType) {
@@ -172,7 +207,7 @@ export class EditEntryComponent implements OnInit {
 
         this.expenseService.updateExpense(this.entry.key, this.entry)
           .then(() => {
-
+            let initialAmount: number = this.entry.amount;
             if (initialAccount.key != this.entry.fromAccount.id) {
               this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance + initialAmount);
               let newAccount: Account = this.accountService.getAccountById(this.entry.fromAccount.id);
@@ -183,30 +218,28 @@ export class EditEntryComponent implements OnInit {
           });
         break;
       case EntryType.Income:
-        initialAccount = this.accountService.getAccountById(this.entry.toAccount.id);
-        let icategory = {
-          id: c.key,
-          name: c.name,
-          img: c.img
-        };
-        this.entry.category = icategory;
-        this.entry.toAccount = {
-          id: a.key,
-          name: a.name,
-          img: a.img
-        };
 
-        this.incomeService.updateIncome(this.entry.key, this.entry)
-          .then(() => {
+        let income: Income = this.getIncome();
 
-            if (initialAccount.key != this.entry.toAccount.id) {
-              this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - initialAmount);
-              let newAccount: Account = this.accountService.getAccountById(this.entry.toAccount.id);
-              this.accountService.updateBalance(newAccount.key, newAccount.currentBalance + this.entry.amount);
-            } else if (initialAmount != this.entry.amount) {
-              this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - (initialAmount - this.entry.amount));
-            }
-          });
+        if (this.key) {
+          initialAccount = this.accountService.getAccountById(income.toAccount.id);
+          let initialAmount: number = this.entry.amount;
+
+          this.incomeService.updateIncome(this.key, income)
+            .then(() => {
+
+              if (initialAccount.key != income.toAccount.id) {
+                this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - initialAmount);
+                let newAccount: Account = this.accountService.getAccountById(income.toAccount.id);
+                this.accountService.updateBalance(newAccount.key, newAccount.currentBalance + income.amount);
+              } else if (initialAmount != income.amount) {
+                this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - (initialAmount - income.amount));
+              }
+            });
+        }else{
+          this.incomeService.saveIncome(income);
+        }
+
 
         break;
     }
@@ -224,27 +257,30 @@ export class EditEntryComponent implements OnInit {
   }
 
   loadEntry() {
-    if (this.entryType == EntryType.Income) {
-      let income: Income = _.chain(this.entryService.getIncomesLocal())
-        .filter((i: Income) => i.key == this.key)
-        .first()
-        .value();
+    if (this.key) {
+      if (this.entryType == EntryType.Income) {
+        let income: Income = _.chain(this.entryService.getIncomesLocal())
+          .filter((i: Income) => i.key == this.key)
+          .first()
+          .value();
 
-      this.setValues(income, false);
-    } else if (this.entryType == EntryType.Expense) {
-      let expense: Expense = _.chain(this.entryService.getExpensesLocal())
-        .filter((i: Expense) => i.key == this.key)
-        .first()
-        .value();
+        this.setValues(income, false);
+      } else if (this.entryType == EntryType.Expense) {
+        let expense: Expense = _.chain(this.entryService.getExpensesLocal())
+          .filter((i: Expense) => i.key == this.key)
+          .first()
+          .value();
 
-      this.setValues(expense, true);
-    } else {
-      let budgetExpense: BudgetExpense = _.chain(this.entryService.getBudgetExpensesLocal())
-        .filter((i: BudgetExpense) => i.key == this.key)
-        .first()
-        .value();
-      this.setValues(budgetExpense, true);
+        this.setValues(expense, true);
+      } else {
+        let budgetExpense: BudgetExpense = _.chain(this.entryService.getBudgetExpensesLocal())
+          .filter((i: BudgetExpense) => i.key == this.key)
+          .first()
+          .value();
+        this.setValues(budgetExpense, true);
+      }
     }
+
   }
 
   getCategory(id: String) {

@@ -9,6 +9,7 @@ import { EditEntryComponent } from '../pages/edit-entry/edit-entry.component';
 const routes: Routes = [
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
   { path: 'edit-entry/:key/:entryType', component: EditEntryComponent, canActivate: [AuthGuard] },
+  { path: 'create-entry/:entryType', component: EditEntryComponent, canActivate: [AuthGuard] }
   { path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: 'calendar' }
