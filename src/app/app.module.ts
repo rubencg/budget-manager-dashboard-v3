@@ -17,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { EditEntryComponent } from './pages/edit-entry/edit-entry.component';
 import { FormsModule } from '@angular/forms';
+import { MyDatePickerModule } from 'mydatepicker';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { FormsModule } from '@angular/forms';
     AngularFireAuthModule,
     NgxSpinnerModule,
     FormsModule,
+    MyDatePickerModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     CalendarModule.forRoot(),
     NgxLoadingModule.forRoot({})

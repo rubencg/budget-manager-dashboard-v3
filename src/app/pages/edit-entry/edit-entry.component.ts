@@ -11,6 +11,7 @@ import { AccountService } from 'src/app/services/account.service';
 import { IncomeService } from 'src/app/services/income.service';
 import { BudgetExpenseService } from 'src/app/services/budget-expense.service';
 import * as moment from 'moment';
+import { IMyDpOptions } from 'mydatepicker';
 
 @Component({
   selector: 'app-edit-entry',
@@ -25,6 +26,9 @@ export class EditEntryComponent implements OnInit {
   accounts: Account[];
   subcategories: IdNameBasic[];
   entry: any;
+  datePickerOptions: IMyDpOptions = {
+    dateFormat: 'dd.mm.yyyy',
+  };
 
   private sub: any;
 
@@ -37,7 +41,8 @@ export class EditEntryComponent implements OnInit {
       category: [''],
       notes: [''],
       amount: ['', Validators.required],
-      subcategory: ['']
+      subcategory: [''],
+      entryDate: [null, Validators.required]
     })
     this.load();
   }
@@ -46,8 +51,23 @@ export class EditEntryComponent implements OnInit {
 
   }
 
+  setDate(): void {
+    // Set today date using the patchValue function
+    let date = new Date();
+    this.entryForm.patchValue({
+      entryDate: {
+        date: {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate()
+        }
+      }
+    });
+  }
+
   load() {
     this.spinner.show();
+    this.setDate();
     this.route.params.subscribe(params => {
       this.key = params['key'];
       this.entryType = +params['entryType'];
@@ -156,7 +176,7 @@ export class EditEntryComponent implements OnInit {
         notes: notes,
         category: category,
         toAccount: toAccount,
-        date: moment().format('x')
+        date: this.getStringDate()
       };
       return income;
     }
@@ -196,7 +216,7 @@ export class EditEntryComponent implements OnInit {
         notes: notes,
         category: category,
         fromAccount: fromAccount,
-        date: moment().format('x')
+        date: this.getStringDate()
       };
       return expense;
     }
@@ -228,15 +248,24 @@ export class EditEntryComponent implements OnInit {
         amount: amount,
         notes: notes,
         category: category,
-        date: moment().format('x')
+        date: this.getStringDate()
       };
       return expense;
     }
   }
 
-  submit() {
-    let initialAccount: Account;
+  getStringDate(){
+    let date = this.entryForm.controls['entryDate'].value.date;
+    return moment(new Date(date.year, date.month - 1, date.day)).format('x')
+  }
 
+  submit() {
+    this.saveEntry();
+    this.router.navigate(['/calendar']);
+  }
+
+  saveEntry() {
+    let initialAccount: Account;
     switch (this.entryType) {
       case EntryType.BudgetExpense:
         let budgetExpense = this.getBudgetExpense();
@@ -295,9 +324,6 @@ export class EditEntryComponent implements OnInit {
 
         break;
     }
-
-    this.router.navigate(['/calendar']);
-
   }
 
   categoryChanged() {
