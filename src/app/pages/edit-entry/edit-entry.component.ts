@@ -12,6 +12,7 @@ import { IncomeService } from 'src/app/services/income.service';
 import { BudgetExpenseService } from 'src/app/services/budget-expense.service';
 import * as moment from 'moment';
 import { IMyDpOptions } from 'mydatepicker';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-edit-entry',
@@ -42,7 +43,8 @@ export class EditEntryComponent implements OnInit {
       notes: [''],
       amount: ['', Validators.required],
       subcategory: [''],
-      entryDate: [null, Validators.required]
+      entryDate: [null, Validators.required],
+      times: [''],
     })
     this.load();
   }
@@ -51,9 +53,8 @@ export class EditEntryComponent implements OnInit {
 
   }
 
-  setDate(): void {
-    // Set today date using the patchValue function
-    let date = new Date();
+  setDate(date: Date = new Date()): void {
+
     this.entryForm.patchValue({
       entryDate: {
         date: {
@@ -68,6 +69,7 @@ export class EditEntryComponent implements OnInit {
   load() {
     this.spinner.show();
     this.setDate();
+    this.entryForm.controls['times'].setValue(1);
     this.route.params.subscribe(params => {
       this.key = params['key'];
       this.entryType = +params['entryType'];
@@ -112,6 +114,7 @@ export class EditEntryComponent implements OnInit {
     } else {
       this.accounts = this.accountService.getAccountsLocal();
       this.entryForm.controls['account'].setValue(this.accounts[0]);
+
       if (this.entryType == EntryType.Income) {
         this.loadIncomeCategories(this.categoryService.getIncomeCategoriesLocal());
         this.loadEntry();
@@ -169,6 +172,7 @@ export class EditEntryComponent implements OnInit {
       this.entry.notes = notes;
       this.entry.category = category;
       this.entry.toAccount = toAccount;
+      this.entry.date = this.getStringDate();
       return this.entry;
     } else {
       let income: Income = {
@@ -209,6 +213,7 @@ export class EditEntryComponent implements OnInit {
       this.entry.notes = notes;
       this.entry.category = category;
       this.entry.fromAccount = fromAccount;
+      this.entry.date = this.getStringDate();
       return this.entry;
     } else {
       let expense: Expense = {
@@ -227,6 +232,7 @@ export class EditEntryComponent implements OnInit {
     let amount: number = +this.entryForm.controls['amount'].value;
     let notes: string = this.entryForm.controls['notes'].value;
     let s = this.entryForm.controls['subcategory'].value;
+
     let category: CategoryBasic = {
       id: c.key,
       name: c.name,
@@ -242,6 +248,7 @@ export class EditEntryComponent implements OnInit {
       this.entry.amount = amount;
       this.entry.notes = notes;
       this.entry.category = category;
+      this.entry.date = this.getStringDate();
       return this.entry;
     } else {
       let expense: BudgetExpense = {
@@ -273,7 +280,17 @@ export class EditEntryComponent implements OnInit {
         if (this.key) {
           this.budgetExpenseService.updateBudgetExpense(budgetExpense.key, budgetExpense);
         } else {
-          this.budgetExpenseService.saveBudgetExpense(budgetExpense);
+          let times:number = +this.entryForm.controls['times'].value;
+          let d = this.entryForm.controls['entryDate'].value.date;
+          let date = moment(new Date(d.year, d.month - 1, d.day));
+
+          for (let index = 0; index < times; index++) {
+            if(times > 0 && index > 0){
+              budgetExpense.date = moment(date.add(7, 'days')).format('x');
+            }
+            this.budgetExpenseService.saveBudgetExpense(budgetExpense);
+          }
+
         }
         break;
       case EntryType.Expense:
@@ -394,6 +411,8 @@ export class EditEntryComponent implements OnInit {
     this.entryForm.controls['notes'].setValue(entry.notes);
     this.entryForm.controls['amount'].setValue(entry.amount);
     this.entryForm.controls['category'].setValue(category);
+    // this.entryForm.controls['entryDate'].setValue(moment(new Date(+entry.date)).toDate());
+    this.setDate(moment(new Date(+entry.date)).toDate());
     if (getSubcat) {
       this.entryForm.controls['subcategory'].setValue(subcategory);
     }

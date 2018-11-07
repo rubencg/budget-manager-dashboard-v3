@@ -34,6 +34,10 @@
         <label for="notes">Notas:</label>
         <input type="text" class="form-control" name="notes" formControlName="notes">
       </div>
+      <div class="form-group" *ngIf="entryType == 3 && !key">
+        <label for="notes">Repetir:</label>
+        <input type="number" class="form-control" name="times" formControlName="times" value="0">
+      </div>
       <div class="form-group">
         <label for="notes">Cantidad:</label>
         <input type="number" class="form-control" name="amount" formControlName="amount">
