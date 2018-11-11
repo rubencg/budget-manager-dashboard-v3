@@ -271,6 +271,36 @@ export class EditEntryComponent implements OnInit {
     this.router.navigate(['/calendar']);
   }
 
+  delete(){
+    this.spinner.show();
+    switch (this.entryType) {
+      case EntryType.BudgetExpense:
+        this.budgetExpenseService.deleteBudgetExpense(this.key)
+          .then(() => {
+            this.spinner.hide();
+            this.router.navigate(['/calendar']);
+          });
+        break;
+      case EntryType.Expense:
+        let expense: Expense = this.getExpense();
+        this.expenseService.deleteExpense(expense)
+        .then(() => {
+          this.spinner.hide();
+          this.router.navigate(['/calendar']);
+        });
+        break;
+      case EntryType.Income:
+        let income: Income = this.getIncome();
+        this.incomeService.deleteIncome(income)
+        .then(() => {
+          this.spinner.hide();
+          this.router.navigate(['/calendar']);
+        });
+        break;
+    }
+
+  }
+
   saveEntry() {
     let initialAccount: Account;
     switch (this.entryType) {
@@ -297,8 +327,9 @@ export class EditEntryComponent implements OnInit {
 
         if (this.key) {
           let initialAmount: number = this.entry.amount;
+          initialAccount = this.accountService.getAccountById(this.entry.fromAccount.id);
           let expense: Expense = this.getExpense();
-          initialAccount = this.accountService.getAccountById(expense.fromAccount.id);
+
 
           this.expenseService.updateExpense(expense.key, expense)
             .then(() => {
@@ -319,8 +350,8 @@ export class EditEntryComponent implements OnInit {
         if (this.key) {
 
           let initialAmount: number = this.entry.amount;
+          initialAccount = this.accountService.getAccountById(this.entry.toAccount.id);
           let income: Income = this.getIncome();
-          initialAccount = this.accountService.getAccountById(income.toAccount.id);
 
           this.incomeService.updateIncome(this.key, income)
             .then(() => {
