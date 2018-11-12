@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Aplicar gasto proyectado</h5>
+    <form [formGroup]="entryForm">
+      <div class="form-group">
+        <label for="category">Cuenta:</label>
+        <select class="form-control" name="account" formControlName="account">
+          <option *ngFor="let account of accounts" [ngValue]="account">
+            {{account.name}}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="category">Fecha:</label>
+        <my-date-picker name="entryDate" [options]="datePickerOptions" formControlName="entryDate"></my-date-picker>
+      </div>
+      <button type="submit" (click)="submit()" [disabled]="!entryForm.valid" class="btn btn-primary">Salvar</button>
+    </form>
+  </div>
+</div>

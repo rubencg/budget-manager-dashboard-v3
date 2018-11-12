@@ -18,6 +18,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { EditEntryComponent } from './pages/edit-entry/edit-entry.component';
 import { FormsModule } from '@angular/forms';
 import { MyDatePickerModule } from 'mydatepicker';
+import { ApplyBudgetComponent } from './pages/apply-budget/apply-budget.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { MyDatePickerModule } from 'mydatepicker';
     CalendarComponent,
     AccountsComponent,
     LoginComponent,
-    EditEntryComponent
+    EditEntryComponent,
+    ApplyBudgetComponent
   ],
   imports: [
     BrowserModule,

@@ -42,8 +42,9 @@
         <label for="notes">Cantidad:</label>
         <input type="number" class="form-control" name="amount" formControlName="amount">
       </div>
-      <button type="submit" (click)="submit()" [disabled]="!entryForm.valid" class="btn btn-primary">Salvar</button>
+      <button type="submit" (click)="submit()" [disabled]="!entryForm.valid" class="btn btn-success">Salvar</button>
       <button *ngIf="key" (click)="delete()" class="btn btn-danger delete-button">Eliminar</button>
+      <button *ngIf="entryType == 3 && key" (click)="applyBudgetExpense()" class="btn btn-primary delete-button">Aplicar</button>
     </form>
   </div>
 </div>

@@ -261,7 +261,7 @@ export class EditEntryComponent implements OnInit {
     }
   }
 
-  getStringDate(){
+  getStringDate() {
     let date = this.entryForm.controls['entryDate'].value.date;
     return moment(new Date(date.year, date.month - 1, date.day)).format('x')
   }
@@ -271,7 +271,11 @@ export class EditEntryComponent implements OnInit {
     this.router.navigate(['/calendar']);
   }
 
-  delete(){
+  applyBudgetExpense() {
+    this.router.navigate(['/apply-budget', this.key]);
+  }
+
+  delete() {
     this.spinner.show();
     switch (this.entryType) {
       case EntryType.BudgetExpense:
@@ -284,18 +288,18 @@ export class EditEntryComponent implements OnInit {
       case EntryType.Expense:
         let expense: Expense = this.getExpense();
         this.expenseService.deleteExpense(expense)
-        .then(() => {
-          this.spinner.hide();
-          this.router.navigate(['/calendar']);
-        });
+          .then(() => {
+            this.spinner.hide();
+            this.router.navigate(['/calendar']);
+          });
         break;
       case EntryType.Income:
         let income: Income = this.getIncome();
         this.incomeService.deleteIncome(income)
-        .then(() => {
-          this.spinner.hide();
-          this.router.navigate(['/calendar']);
-        });
+          .then(() => {
+            this.spinner.hide();
+            this.router.navigate(['/calendar']);
+          });
         break;
     }
 
@@ -310,12 +314,12 @@ export class EditEntryComponent implements OnInit {
         if (this.key) {
           this.budgetExpenseService.updateBudgetExpense(budgetExpense.key, budgetExpense);
         } else {
-          let times:number = +this.entryForm.controls['times'].value;
+          let times: number = +this.entryForm.controls['times'].value;
           let d = this.entryForm.controls['entryDate'].value.date;
           let date = moment(new Date(d.year, d.month - 1, d.day));
 
           for (let index = 0; index < times; index++) {
-            if(times > 0 && index > 0){
+            if (times > 0 && index > 0) {
               budgetExpense.date = moment(date.add(7, 'days')).format('x');
             }
             this.budgetExpenseService.saveBudgetExpense(budgetExpense);
@@ -431,30 +435,32 @@ export class EditEntryComponent implements OnInit {
   }
 
   setValues(entry, getSubcat: boolean) {
-    this.entry = entry;
-    let category = this.getCategory(entry.category.id);
-    let subcategory: IdNameBasic;
-    if (getSubcat) {
-      this.subcategories = category.subcategories;
-      subcategory = this.getSubcategory(entry.category.subcategory.id);
-    }
+    if (entry) {
+      this.entry = entry;
+      let category = this.getCategory(entry.category.id);
+      let subcategory: IdNameBasic;
+      if (getSubcat) {
+        this.subcategories = category.subcategories;
+        subcategory = this.getSubcategory(entry.category.subcategory.id);
+      }
 
-    this.entryForm.controls['notes'].setValue(entry.notes);
-    this.entryForm.controls['amount'].setValue(entry.amount);
-    this.entryForm.controls['category'].setValue(category);
-    // this.entryForm.controls['entryDate'].setValue(moment(new Date(+entry.date)).toDate());
-    this.setDate(moment(new Date(+entry.date)).toDate());
-    if (getSubcat) {
-      this.entryForm.controls['subcategory'].setValue(subcategory);
-    }
+      this.entryForm.controls['notes'].setValue(entry.notes);
+      this.entryForm.controls['amount'].setValue(entry.amount);
+      this.entryForm.controls['category'].setValue(category);
+      // this.entryForm.controls['entryDate'].setValue(moment(new Date(+entry.date)).toDate());
+      this.setDate(moment(new Date(+entry.date)).toDate());
+      if (getSubcat) {
+        this.entryForm.controls['subcategory'].setValue(subcategory);
+      }
 
-    let account;
-    if (entry.fromAccount) {
-      account = this.getAccount(entry.fromAccount.id);
-    } else if (entry.toAccount) {
-      account = this.getAccount(entry.toAccount.id);
+      let account;
+      if (entry.fromAccount) {
+        account = this.getAccount(entry.fromAccount.id);
+      } else if (entry.toAccount) {
+        account = this.getAccount(entry.toAccount.id);
+      }
+      this.entryForm.controls['account'].setValue(account);
     }
-    this.entryForm.controls['account'].setValue(account);
   }
 
 }
