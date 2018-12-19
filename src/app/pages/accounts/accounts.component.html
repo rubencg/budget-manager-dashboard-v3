@@ -1,3 +1,19 @@
-<p>
-  accounts works!
-</p>
+<div class="row text-center">
+  <div class="col">
+    <h3>Cuentas</h3>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let account of accounts">
+            {{account.name}}
+          <span [ngClass]="{'badge-success': account.currentBalance >= 0, 'badge-danger': account.currentBalance < 0}"
+            class="badge badge-pill">{{account.currentBalance | currency:'USD':true:'1.2-2'}}</span>
+        </li>
+      </ul>
+  </div>
+  <div class="col-md-4">
+    Working on it
+  </div>
+</div>
