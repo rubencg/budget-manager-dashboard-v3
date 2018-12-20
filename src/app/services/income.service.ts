@@ -47,6 +47,14 @@ export class IncomeService {
       .filter((a: Account) => a.key == income.toAccount.id)
       .value()[0];
 
+    let date: Date = new Date(+income.date);
+    if (!moment(date).isSameOrBefore(moment(new Date()), 'day')) {
+      this.incomes
+        .update(income.key, {
+          date: moment(new Date()).format('x')
+        });
+    }
+
     if (account) {
       let newBalance: number = account.currentBalance + income.amount;
       this.accountProvider.updateBalance(account.key, newBalance);
