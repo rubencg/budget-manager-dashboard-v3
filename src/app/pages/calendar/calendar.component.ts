@@ -48,7 +48,7 @@ export class CalendarComponent implements OnInit {
 
 
   view: CalendarView = CalendarView.Month;
-  private key:string;
+  private key: string;
   CalendarView = CalendarView;
 
   viewDate: Date = new Date();
@@ -64,7 +64,7 @@ export class CalendarComponent implements OnInit {
 
 
   constructor(private entryService: EntryService, private spinner: NgxSpinnerService, private router: Router,
-    private accountService: AccountService,private route: ActivatedRoute) {
+    private accountService: AccountService, private route: ActivatedRoute) {
 
   }
 
@@ -130,35 +130,53 @@ export class CalendarComponent implements OnInit {
       this.entryService.getAllBudgetExpenses()
         .subscribe((items: BudgetExpense[]) => {
           this.events = [];
+          if (this.key) {
+            this.convertIncomesToCalendarEvents(this.filterByAccount(this.entryService.getIncomesLocal(), EntryType.Income));
+            this.convertExpensesToCalendarEvents(this.filterByAccount(this.entryService.getExpensesLocal(), EntryType.Expense));
+          } else {
+            this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
+            this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
+          }
           this.convertBudgetExepensesToCalendarEvents(items);
-          this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
-          this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
         });
 
       this.entryService.getAllIncomes()
         .subscribe((items: Income[]) => {
           this.events = [];
-          if(this.key){
-            items = _.filter(items, (item : Income) => item.toAccount.id == this.key);
+          if (this.key) {
+            this.convertIncomesToCalendarEvents(this.filterByAccount(items, EntryType.Income));
+            this.convertExpensesToCalendarEvents(this.filterByAccount(this.entryService.getExpensesLocal(), EntryType.Expense));
+          } else {
+            this.convertIncomesToCalendarEvents(items);
+            this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
           }
-          this.convertIncomesToCalendarEvents(items);
           this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
-          this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
         });
 
       this.entryService.getAllExpenses()
         .subscribe((items: Expense[]) => {
           this.events = [];
-          if(this.key){
-            items = _.filter(items, (item : Expense) => item.fromAccount.id == this.key);
+          if (this.key) {
+            this.convertExpensesToCalendarEvents(this.filterByAccount(items, EntryType.Expense));
+            this.convertIncomesToCalendarEvents(this.filterByAccount(this.entryService.getIncomesLocal(), EntryType.Income));
+          } else {
+            this.convertExpensesToCalendarEvents(items);
+            this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
           }
-          this.convertExpensesToCalendarEvents(items);
           this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
-          this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
 
           this.spinner.hide(); // To hide the spinner
         });
     });
+  }
+
+  filterByAccount(items, entryType: EntryType) {
+    switch (entryType) {
+      case EntryType.Expense:
+        return _.filter(items, (item: Expense) => item.fromAccount.id == this.key);
+      case EntryType.Income:
+        return _.filter(items, (item: Income) => item.toAccount.id == this.key);
+    }
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -179,19 +197,19 @@ export class CalendarComponent implements OnInit {
     this.router.navigate(['/edit-entry', event.meta.key, event.meta.entryType]);
   }
 
-  addExpense(){
+  addExpense() {
     this.router.navigate(['/create-entry', EntryType.Expense]);
   }
 
-  addBudgetExpense(){
+  addBudgetExpense() {
     this.router.navigate(['/create-entry', EntryType.BudgetExpense]);
   }
 
-  addIncome(){
+  addIncome() {
     this.router.navigate(['/create-entry', EntryType.Income]);
   }
 
-  clearAccount(){
+  clearAccount() {
     this.router.navigate(['/calendar']);
   }
 

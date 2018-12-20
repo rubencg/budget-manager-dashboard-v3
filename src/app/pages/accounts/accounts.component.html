@@ -5,18 +5,19 @@
 </div>
 <div class="row">
   <div class="col-md-8">
-    <ul class="list-group" *ngFor="let chunk of accountsChunk">
-        <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center list-header">
-            {{chunk.title}}
+    <div class="card" *ngFor="let chunk of accountsChunk">
+      <div class="card-header d-flex justify-content-between align-items-center">
+          {{chunk.title}}
           <span class="badge badge-pill">{{chunk.totalValue | currency:'USD':true:'1.2-2'}}</span>
-        </li>
+      </div>
+      <ul class="list-group list-group-flush">
         <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let account of chunk.entries"
-          (click)="showAccount(account)">
+        (click)="showAccount(account)">
             {{account.name}}
-          <span [ngClass]="{'badge-success': account.currentBalance >= 0, 'badge-danger': account.currentBalance < 0}"
-            class="badge badge-pill">{{account.currentBalance | currency:'USD':true:'1.2-2'}}</span>
+            <span [ngClass]="{'badge-success': account.currentBalance >= 0, 'badge-danger': account.currentBalance < 0}" class="badge badge-pill">{{account.currentBalance | currency:'USD':true:'1.2-2'}}</span>
         </li>
       </ul>
+    </div>
   </div>
   <div class="col-md-4">
     Working on it
