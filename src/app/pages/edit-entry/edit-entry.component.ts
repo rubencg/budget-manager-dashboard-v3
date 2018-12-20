@@ -268,7 +268,7 @@ export class EditEntryComponent implements OnInit {
 
   submit() {
     this.saveEntry();
-    this.router.navigate(['/calendar']);
+    this.returnToCalendar();
   }
 
   applyBudgetExpense() {
@@ -282,7 +282,7 @@ export class EditEntryComponent implements OnInit {
         this.budgetExpenseService.deleteBudgetExpense(this.key)
           .then(() => {
             this.spinner.hide();
-            this.router.navigate(['/calendar']);
+            this.returnToCalendar();
           });
         break;
       case EntryType.Expense:
@@ -290,7 +290,7 @@ export class EditEntryComponent implements OnInit {
         this.expenseService.deleteExpense(expense)
           .then(() => {
             this.spinner.hide();
-            this.router.navigate(['/calendar']);
+            this.returnToCalendar();
           });
         break;
       case EntryType.Income:
@@ -298,7 +298,7 @@ export class EditEntryComponent implements OnInit {
         this.incomeService.deleteIncome(income)
           .then(() => {
             this.spinner.hide();
-            this.router.navigate(['/calendar']);
+            this.returnToCalendar();
           });
         break;
     }
@@ -461,6 +461,22 @@ export class EditEntryComponent implements OnInit {
       }
       this.entryForm.controls['account'].setValue(account);
     }
+  }
+
+  applyIncome(){
+    let income: Income = this.entry;
+
+    this.incomeService.applyIncome(income);
+
+    this.returnToCalendar();
+  }
+
+  cancel(){
+    this.returnToCalendar();    
+  }
+
+  returnToCalendar(){
+    this.router.navigate(['/calendar']);
   }
 
 }
