@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/budget-manager-dashboard-v3",
+    "public": "dist",
     "ignore": [
       "firebase.json",
       "**/.*",

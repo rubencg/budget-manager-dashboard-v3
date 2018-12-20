@@ -1,5 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 /src/app/firebase.config.ts
+.firebase/hosting.ZGlzdA.cache
+firebase-debug.log
+
 
 # compiled output
 /dist
