@@ -13,6 +13,7 @@ const routes: Routes = [
   { path: 'create-entry/:entryType', component: EditEntryComponent, canActivate: [AuthGuard] },
   { path: 'apply-budget/:key', component: ApplyBudgetComponent, canActivate: [AuthGuard] },
   { path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard] },
+  { path: 'calendar/:key', component: CalendarComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: 'calendar' }
 ];

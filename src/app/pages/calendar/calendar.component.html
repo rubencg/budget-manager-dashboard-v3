@@ -32,3 +32,8 @@
     (eventTimesChanged)="eventTimesChanged($event)">
   </mwl-calendar-month-view>
 </div>
+<div class="row" *ngIf="key">
+  <div class="col-sm-2">
+      <button type="button" (click)="clearAccount()" class="btn btn-danger">Borrar filtro de cuenta</button>
+  </div>
+</div>

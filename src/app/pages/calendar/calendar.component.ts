@@ -35,7 +35,8 @@ const colors: any = {
   }
 };
 import * as moment from 'moment';
-import { Router } from '@angular/router';
+import * as _ from 'lodash';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AccountService } from 'src/app/services/account.service';
 
 @Component({
@@ -47,7 +48,7 @@ export class CalendarComponent implements OnInit {
 
 
   view: CalendarView = CalendarView.Month;
-
+  private key:string;
   CalendarView = CalendarView;
 
   viewDate: Date = new Date();
@@ -63,7 +64,8 @@ export class CalendarComponent implements OnInit {
 
 
   constructor(private entryService: EntryService, private spinner: NgxSpinnerService, private router: Router,
-    private accountService: AccountService) {
+    private accountService: AccountService,private route: ActivatedRoute) {
+
   }
 
   convertBudgetExepensesToCalendarEvents(items: BudgetExpense[]): void {
@@ -120,6 +122,9 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.key = params['key'];
+    });
     this.spinner.show();
     this.accountService.getAllAccounts().subscribe(items => {
       this.entryService.getAllBudgetExpenses()
@@ -133,6 +138,9 @@ export class CalendarComponent implements OnInit {
       this.entryService.getAllIncomes()
         .subscribe((items: Income[]) => {
           this.events = [];
+          if(this.key){
+            items = _.filter(items, (item : Income) => item.toAccount.id == this.key);
+          }
           this.convertIncomesToCalendarEvents(items);
           this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
           this.convertExpensesToCalendarEvents(this.entryService.getExpensesLocal());
@@ -141,6 +149,9 @@ export class CalendarComponent implements OnInit {
       this.entryService.getAllExpenses()
         .subscribe((items: Expense[]) => {
           this.events = [];
+          if(this.key){
+            items = _.filter(items, (item : Expense) => item.fromAccount.id == this.key);
+          }
           this.convertExpensesToCalendarEvents(items);
           this.convertBudgetExepensesToCalendarEvents(this.entryService.getBudgetExpensesLocal());
           this.convertIncomesToCalendarEvents(this.entryService.getIncomesLocal());
@@ -178,6 +189,10 @@ export class CalendarComponent implements OnInit {
 
   addIncome(){
     this.router.navigate(['/create-entry', EntryType.Income]);
+  }
+
+  clearAccount(){
+    this.router.navigate(['/calendar']);
   }
 
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from 'src/app/services/account.service';
 import { Account, AccountType } from 'src/app/interfaces';
+import {Router } from '@angular/router';
 import * as _ from 'lodash';
 
 @Component({
@@ -12,7 +13,7 @@ export class AccountsComponent implements OnInit {
   accounts: Account[];
   accountsChunk: any[];
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private router: Router) { }
 
   ngOnInit() {
     this.accountService.getAllAccounts().subscribe((accounts: Account[]) => {
@@ -45,6 +46,10 @@ export class AccountsComponent implements OnInit {
         return "Ahorros Sarahi";
     }
     return "";
+  }
+
+  showAccount(account: Account){
+    this.router.navigate(['/calendar', account.key]);
   }
 
 }
