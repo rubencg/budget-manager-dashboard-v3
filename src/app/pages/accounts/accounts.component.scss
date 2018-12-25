@@ -11,3 +11,11 @@
 .center-money{
   text-align: center;
 }
+
+.hidden-edit{
+  display: none;
+}
+
+.parent-edit :hover .hidden-edit { 
+  display: inline; 
+}

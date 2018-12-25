@@ -2,48 +2,56 @@
   <div class="card-body">
     <h5 class="card-title">Editar {{ getEntryTypeName() }}</h5>
     <form [formGroup]="entryForm">
-      <div class="form-group" *ngIf="entryType == 1 || entryType == 2">
-        <label for="category">Cuenta:</label>
-        <select class="form-control" name="account" formControlName="account">
-          <option *ngFor="let account of accounts" [ngValue]="account">
-            {{account.name}}
-          </option>
-        </select>
+      <div class="form-row">
+        <div class="form-group col-md-6" *ngIf="entryType == 1 || entryType == 2">
+          <label for="category">Cuenta:</label>
+          <select class="form-control" name="account" formControlName="account">
+            <option *ngFor="let account of accounts" [ngValue]="account">
+              {{account.name}}
+            </option>
+          </select>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="category">Categoria:</label>
-        <select class="form-control" name="category" formControlName="category" (change)="categoryChanged()">
-          <option *ngFor="let category of categories" [ngValue]="category">
-            {{category.name}}
-          </option>
-        </select>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="category">Categoria:</label>
+          <select class="form-control" name="category" formControlName="category" (change)="categoryChanged()">
+            <option *ngFor="let category of categories" [ngValue]="category">
+              {{category.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-md-6" *ngIf="subcategories">
+          <label for="category">Sub-categoria:</label>
+          <select class="form-control" name="subcategory" formControlName="subcategory">
+            <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">
+              {{subcategory.name}}
+            </option>
+          </select>
+        </div>
       </div>
-      <div class="form-group" *ngIf="subcategories">
-        <label for="category">Sub-categoria:</label>
-        <select class="form-control" name="subcategory" formControlName="subcategory">
-          <option *ngFor="let subcategory of subcategories" [ngValue]="subcategory">
-            {{subcategory.name}}
-          </option>
-        </select>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="category">Fecha:</label>
+          <my-date-picker name="entryDate" [options]="datePickerOptions" formControlName="entryDate"></my-date-picker>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="notes">Cantidad:</label>
+          <input type="number" class="form-control" name="amount" formControlName="amount">
+        </div>
       </div>
-      <div class="form-group">
-        <label for="category">Fecha:</label>
-        <my-date-picker name="entryDate" [options]="datePickerOptions" formControlName="entryDate"></my-date-picker>
-      </div>
-      <div class="form-group">
-        <label for="notes">Notas:</label>
-        <input type="text" class="form-control" name="notes" formControlName="notes">
-      </div>
-      <div class="form-group" *ngIf="entryType == 3 && !key">
-        <label for="notes">Repetir:</label>
-        <input type="number" class="form-control" name="times" formControlName="times" value="0">
-      </div>
-      <div class="form-group">
-        <label for="notes">Cantidad:</label>
-        <input type="number" class="form-control" name="amount" formControlName="amount">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="notes">Notas:</label>
+          <input type="text" class="form-control" name="notes" formControlName="notes">
+        </div>
+        <div class="form-group col-md-6" *ngIf="entryType == 3 && !key">
+          <label for="notes">Repetir:</label>
+          <input type="number" class="form-control" name="times" formControlName="times" value="0">
+        </div>
       </div>
       <button type="submit" (click)="submit()" [disabled]="!entryForm.valid" class="btn btn-success">Salvar</button>
-      <button type="submit" (click)="cancel()" class="btn btn-secondary">Cancelar</button>
+      <button (click)="cancel()" class="btn btn-secondary delete-button">Cancelar</button>
       <button *ngIf="key" (click)="delete()" class="btn btn-danger delete-button">Eliminar</button>
       <button *ngIf="entryType == 3 && key" (click)="applyBudgetExpense()" class="btn btn-primary delete-button">Aplicar</button>
       <button *ngIf="entryType == 2 && key && !entry.isApplied" (click)="applyIncome()" class="btn btn-primary delete-button">Aplicar</button>

@@ -19,6 +19,7 @@ import { EditEntryComponent } from './pages/edit-entry/edit-entry.component';
 import { FormsModule } from '@angular/forms';
 import { MyDatePickerModule } from 'mydatepicker';
 import { ApplyBudgetComponent } from './pages/apply-budget/apply-budget.component';
+import { AccountEditComponent } from './pages/account-edit/account-edit.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ApplyBudgetComponent } from './pages/apply-budget/apply-budget.componen
     AccountsComponent,
     LoginComponent,
     EditEntryComponent,
-    ApplyBudgetComponent
+    ApplyBudgetComponent,
+    AccountEditComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { Account } from '../interfaces';
+import { Account, AccountType } from '../interfaces';
 import * as _ from 'lodash';
 import { map } from 'rxjs/operators';
 
@@ -45,5 +45,21 @@ export class AccountService {
 
   createNewAccount(account: Account) {
     this.db.list(this.accountsUrl).push(account);
+  }
+
+  getAccountTypeName(type): string {
+    switch (type) {
+      case AccountType.Debit:
+        return "Debito";
+      case AccountType.Cash:
+        return "Efectivo";
+      case AccountType.Credit:
+        return "Credito";
+      case AccountType.Savings:
+        return "Ahorros Ruben";
+      case AccountType.SarahiSavings:
+        return "Ahorros Sarahi";
+    }
+    return "";
   }
 }

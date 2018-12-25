@@ -46,19 +46,7 @@ export class AccountsComponent implements OnInit {
   }
 
   getAccountTypeName(type): string {
-    switch (type) {
-      case AccountType.Debit:
-        return "Debito";
-      case AccountType.Cash:
-        return "Efectivo";
-      case AccountType.Credit:
-        return "Credito";
-      case AccountType.Savings:
-        return "Ahorros Ruben";
-      case AccountType.SarahiSavings:
-        return "Ahorros Sarahi";
-    }
-    return "";
+    return this.accountService.getAccountTypeName(type);
   }
 
   showAccount(account: Account) {
@@ -89,6 +77,14 @@ export class AccountsComponent implements OnInit {
       })
       .sumBy('amount')
       .value();
+  }
+
+  editAccount(account: Account){
+    this.router.navigate(['/edit-account', account.key]);
+  }
+
+  deleteAccount(account: Account){
+    
   }
 
 }
