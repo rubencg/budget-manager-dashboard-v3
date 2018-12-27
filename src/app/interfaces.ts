@@ -10,7 +10,7 @@ export interface Account {
   currentBalance: number;
   name: string;
   isSummable?: boolean;
-  img: string;
+  img?: string;
   type?: AccountType;
 }
 

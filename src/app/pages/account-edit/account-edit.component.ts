@@ -4,7 +4,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AccountService } from 'src/app/services/account.service';
 import { Account } from 'src/app/interfaces';
 import * as _ from 'lodash';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-account-edit',
@@ -20,7 +20,7 @@ export class AccountEditComponent implements OnInit {
   ];
 
   constructor(private fb: FormBuilder, private spinner: NgxSpinnerService, private accountService: AccountService,
-    private route: ActivatedRoute) { 
+    private route: ActivatedRoute, private router: Router) { 
     this.entryForm = this.fb.group({
       accountName: [''],
       currentBalance: [''],
@@ -49,11 +49,29 @@ export class AccountEditComponent implements OnInit {
 
         this.spinner.hide();
     });
-    
   }
 
   getAccountTypeName(type): string {
     return this.accountService.getAccountTypeName(type);
+  }
+
+  cancel(){
+    this.router.navigate(['/accounts']);
+  }
+
+  submit(){
+    this.spinner.show();
+    let account: Account = {
+      name: this.entryForm.controls['accountName'].value,
+      isSummable: this.entryForm.controls['isSummable'].value,
+      currentBalance: this.entryForm.controls['currentBalance'].value,
+      type: this.entryForm.controls['category'].value,
+    };
+    
+    this.accountService.update(this.key, account).then(() => {
+      this.spinner.hide();
+      this.router.navigate(['/accounts']);
+    });
   }
 
   ngOnInit() {

@@ -43,6 +43,16 @@ export class AccountService {
       });
   }
 
+  update(key: string, account: Account): Promise<void> {
+    return this.db.list(this.accountsUrl)
+      .update(key, {
+        currentBalance: account.currentBalance,
+        name: account.name,
+        isSummable: account.isSummable,
+        type: account.type
+      });
+  }
+
   createNewAccount(account: Account) {
     this.db.list(this.accountsUrl).push(account);
   }

@@ -15,7 +15,7 @@
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="category">Categoria:</label>
-          <select class="form-control" name="category" formControlName="category" (change)="categoryChanged()">
+          <select class="form-control" name="category" formControlName="category">
             <option *ngFor="let category of categories" [ngValue]="category">
               {{getAccountTypeName(category)}}
             </option>
