@@ -15,7 +15,6 @@
           (click)="showAccount(account)">
           <span>{{account.name}}</span>
           <button type="button" (click)="editAccount(account)" class="btn btn-primary"><span  class="oi oi-pencil"></span></button>
-          <button type="button" (click)="deleteAccount(account)" class="btn btn-primary"><span class="oi oi-trash"></span></button>
           <span [ngClass]="{'badge-success': account.currentBalance >= 0, 'badge-danger': account.currentBalance < 0}" class="badge badge-pill">
             {{account.currentBalance | currency:'USD':true:'1.2-2'}}
           </span>
