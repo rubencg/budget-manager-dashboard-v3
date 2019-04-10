@@ -358,13 +358,14 @@ export class EditEntryComponent implements OnInit {
 
           this.incomeService.updateIncome(this.key, income)
             .then(() => {
-
-              if (initialAccount.key != income.toAccount.id) {
-                this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - initialAmount);
-                let newAccount: Account = this.accountService.getAccountById(income.toAccount.id);
-                this.accountService.updateBalance(newAccount.key, newAccount.currentBalance + income.amount);
-              } else if (initialAmount != income.amount) {
-                this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - (initialAmount - income.amount));
+              if(this.entry.isApplied){
+                if (initialAccount.key != income.toAccount.id) {
+                  this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - initialAmount);
+                  let newAccount: Account = this.accountService.getAccountById(income.toAccount.id);
+                  this.accountService.updateBalance(newAccount.key, newAccount.currentBalance + income.amount);
+                } else if (initialAmount != income.amount) {
+                  this.accountService.updateBalance(initialAccount.key, initialAccount.currentBalance - (initialAmount - income.amount));
+                }
               }
             });
         } else {
@@ -471,7 +472,7 @@ export class EditEntryComponent implements OnInit {
   }
 
   cancel(){
-    this.returnToCalendar();    
+    this.returnToCalendar();
   }
 
   returnToCalendar(){
