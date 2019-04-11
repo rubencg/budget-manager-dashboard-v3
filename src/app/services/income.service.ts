@@ -86,13 +86,15 @@ export class IncomeService {
     let promise = this.incomes.remove(income.key);
 
     promise.then(() => {
-      let account: Account = _.chain(this.accountProvider.getAccountsLocal())
-        .filter((a: Account) => a.key == income.toAccount.id)
-        .value()[0];
+      if(income.isApplied){
+        let account: Account = _.chain(this.accountProvider.getAccountsLocal())
+          .filter((a: Account) => a.key == income.toAccount.id)
+          .value()[0];
 
-      if (account) {
-        let newBalance: number = account.currentBalance - income.amount;
-        this.accountProvider.updateBalance(account.key, newBalance);
+        if (account) {
+          let newBalance: number = account.currentBalance - income.amount;
+          this.accountProvider.updateBalance(account.key, newBalance);
+        }
       }
     });
 

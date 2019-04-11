@@ -54,7 +54,7 @@
       <button (click)="cancel()" class="btn btn-secondary delete-button">Cancelar</button>
       <button *ngIf="key" (click)="delete()" class="btn btn-danger delete-button">Eliminar</button>
       <button *ngIf="entryType == 3 && key" (click)="applyBudgetExpense()" class="btn btn-primary delete-button">Aplicar</button>
-      <button *ngIf="entryType == 2 && key && !entry.isApplied" (click)="applyIncome()" class="btn btn-primary delete-button">Aplicar</button>
+      <button *ngIf="entryType == 2 && key && entry && !entry.isApplied" (click)="applyIncome()" class="btn btn-primary delete-button">Aplicar</button>
     </form>
   </div>
 </div>
