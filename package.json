@@ -26,7 +26,7 @@
     "core-js": "^2.5.4",
     "date-fns": "^1.29.0",
     "firebase": "^5.7.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "moment": "^2.22.2",
     "mydatepicker": "^2.6.6",
     "ngx-loading": "^3.0.1",
