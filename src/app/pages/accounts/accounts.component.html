@@ -31,5 +31,14 @@
         <span class="quantity">{{ moneyLeft | currency }}</span>
       </div>
     </div>
+
+    <div class="card" >
+      <div class="card-header">
+        Transferencias
+      </div>
+      <div class="card-body center-money">
+        <button (click)="transfer()" class="btn btn-success delete-button">Transferir entre cuentas</button>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,0 +1,33 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Transferir</h5>
+    <form [formGroup]="entryForm">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="category">Origen:</label>
+          <select class="form-control" name="originAccount" formControlName="originAccount" >
+            <option *ngFor="let originAccount of accounts" [ngValue]="originAccount">
+              {{originAccount.name}}
+            </option>
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="category">Destino:</label>
+          <select class="form-control" name="destinationAccount" formControlName="destinationAccount">
+          <option *ngFor="let destinationAccount of accounts" [ngValue]="destinationAccount">
+              {{destinationAccount.name}}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="notes">Cantidad:</label>
+          <input type="number" class="form-control" name="amount" formControlName="amount">
+        </div>
+      </div>
+      <button type="submit" (click)="submit()" [disabled]="!entryForm.valid" class="btn btn-success">Salvar</button>
+      <button (click)="cancel()" class="btn btn-secondary right-button">Cancelar</button>
+    </form>
+  </div>
+</div>

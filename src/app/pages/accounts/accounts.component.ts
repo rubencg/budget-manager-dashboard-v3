@@ -83,8 +83,8 @@ export class AccountsComponent implements OnInit {
     this.router.navigate(['/edit-account', account.key]);
   }
 
-  deleteAccount(account: Account){
-    
+  transfer(){
+    this.router.navigate(['/transfer']);
   }
 
 }
