@@ -7,6 +7,7 @@ import { AuthGuard } from '../guards/auth.guard';
 import { EditEntryComponent } from '../pages/edit-entry/edit-entry.component';
 import { ApplyBudgetComponent } from '../pages/apply-budget/apply-budget.component';
 import { AccountEditComponent } from '../pages/account-edit/account-edit.component';
+import { TransferComponent } from '../pages/transfer/transfer.component';
 
 const routes: Routes = [
   { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'accounts', component: AccountsComponent, canActivate: [AuthGuard] },
   { path: 'calendar/:key', component: CalendarComponent, canActivate: [AuthGuard] },
   { path: 'edit-account/:key', component: AccountEditComponent, canActivate: [AuthGuard] },
+  { path: 'transfer', component: TransferComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: 'calendar' }
 ];

@@ -48,7 +48,7 @@ export class CalendarComponent implements OnInit {
 
 
   view: CalendarView = CalendarView.Month;
-  private key: string;
+  key: string;
   CalendarView = CalendarView;
 
   viewDate: Date = new Date();

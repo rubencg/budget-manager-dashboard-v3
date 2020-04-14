@@ -2,6 +2,7 @@
 /src/app/firebase.config.ts
 .firebase/hosting.ZGlzdA.cache
 firebase-debug.log
+.firebase/
 
 
 # compiled output

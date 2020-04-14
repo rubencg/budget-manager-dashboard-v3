@@ -10,6 +10,7 @@ import { ExpenseService } from './expense.service';
 import { IncomeService } from './income.service';
 import { BudgetExpenseService } from './budget-expense.service';
 import { AccountService } from './account.service';
+import { TransferService } from './transfer.service';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { AccountService } from './account.service';
     ExpenseService,
     IncomeService,
     BudgetExpenseService,
-    AccountService
+    AccountService,
+    TransferService
   ],
   declarations: []
 })
